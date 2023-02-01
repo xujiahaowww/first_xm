@@ -1,0 +1,52 @@
+.container {
+  position: relative;
+  height: 100%;
+  background: #dce2e5;
+}
+
+.search {
+  margin-top: 10px;
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+.adm-tabs-tab-disabled {
+  opacity: 1
+}
+
+.content {
+  height: 120px;
+  color: #999999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 24px;
+  user-select: none;
+}
+
+.lunbo {
+  height: 120px;
+  color: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 48px;
+  user-select: none;
+}
+
+.tupian {
+  float: left;
+  width: 45%;
+  height: 37%;
+  margin-left: 3%;
+  position: relative;
+  z-index: 10
+}
+
+.footer {
+  background: #9e9f9f;
+  width: 100%;
+  position: fixed !important;
+  bottom: 0;
+  left: 0;
+}

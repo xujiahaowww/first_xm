@@ -1,0 +1,239 @@
+
+.div-relative {
+    position: relative;
+    color: #000;
+    border: 1px solid #000;
+}
+
+.div-a {
+    position: absolute;
+    left: 15%;
+    top: 50%;
+    color: aliceblue;
+    font-size: 5em;
+}
+
+.div-b {
+    position: absolute;
+}
+
+.div-c {
+    position: absolute;
+    right: 0%;
+}
+
+/* .demoTitle:before,
+.demoTitle:after {
+  border-bottom: none;
+}
+.loginbtn {
+   width: 60px;
+   margin: 0 auto;
+} */
+.Login_Register_page {
+    width: 100vw;
+    height: 100vh;
+    margin: 0 auto;
+
+}
+
+.Login_Register_button {
+    display: flex;
+    justify-content: space-around;
+}
+
+.Login_Register_item1 {
+    /* color: red; */
+}
+
+.Login_Register_item2 {
+    /* color: #000; */
+}
+
+.Login_Register_item {
+    width: 45vw;
+    display: block;
+    outline: 0 none;
+    box-sizing: border-box;
+    padding: 0;
+    text-align: center;
+    font-size: 16px;
+    height: 10vw;
+    line-height: 30px;
+    color: black;
+    background-color: white;
+    border: 1PX solid #ddd;
+    /* border-radius: 1vw; */
+    margin-top: 10vw;
+    margin-bottom: 1vw;
+    position: relative;
+    z-index: 100;
+}
+
+.am-button {
+    width: 50vw;
+    display: block;
+    outline: 0 none;
+    /* box-sizing: border-box; */
+    padding: 0;
+    text-align: center;
+    font-size: 16px;
+    height: 10vw;
+    line-height: 30px;
+    color: black;
+    background-color: white;
+    border: 1PX solid #ddd;
+    border-radius: 0px 0px 0px 0px;
+    margin-top: 10vw;
+    margin-bottom: 1vw;
+    position: relative;
+    z-index: 1;
+}
+
+.am-tab-bar-bar {
+    position: relative;
+    height: 50px;
+    border-top: 1PX solid #ddd;
+    width: 100%;
+    display: flex;
+    transition-duration: .2s;
+    transition-property: height bottom;
+    position: relative;
+    z-index: 1;
+    justify-content: space-around;
+    align-items: center;
+    bottom: 0;
+}
+
+.am-tab-bar-item {
+    height: 100%;
+    position: relative;
+    z-index: 1;
+    /* background-color:#fff; */
+}
+
+.am-list-item {
+    position: relative;
+    display: flex;
+    width: 90vw;
+    align-items: center;
+    background-color: #ededed;
+    margin: 0 auto;
+    margin-top: 2vh;
+    border-radius: 1vh;
+}
+
+.am-list-item .am-input-label {
+    color: #000;
+    font-size: 14px;
+    margin-left: 0;
+    margin-right: -33px;
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    padding: 0px 0;
+}
+
+.am-list-item .am-input-control input {
+    color: #000;
+    font-size: 9px;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    width: 100%;
+    padding: 2px 0;
+    border: 0;
+    background-color: transparent;
+    line-height: 1;
+    box-sizing: border-box;
+}
+
+.inputverif_father {
+    width: 100vw;
+    height: 10vh;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.inputverif {
+    width: 60vw;
+}
+
+.yanzhengma {
+    /* width: 2vw; */
+    /* position: relative; */
+    height: 20px;
+    z-index: 10000;
+    text-align: right;
+    margin-right: 20px;
+}
+.zhuche{
+    color: rgb(189, 192, 255);
+    /* position: absolute; */
+    margin-right: 10px;
+    /* height: 20px; */
+    margin-bottom: 10px;
+    text-align: right;
+}
+.toLogin_btn {
+    width: 90vw;
+    height: 6vh;
+    margin: 0 auto;
+    line-height: 6vh;
+    background-color: #ffe32a;
+    margin-top: 5vh;
+
+}
+
+.otherLogin_item {
+    width: 100vw;
+    position: relative;
+    z-index: 100;
+    color: #ccc;
+}
+
+.otherLogin_item_img {
+    width: 10vw;
+    height: 5.5vh;
+    position: relative;
+    z-index: 100;
+    margin-left: 1vw;
+
+}
+
+.backindex {
+    position: relative;
+    z-index: 100;
+    width: 40vw;
+    height: 1vh;
+    color: #ffe32a;
+    margin-top: 2vh;
+}
+
+.am-list-item .am-input-control input {
+    color: #000;
+    font-size: 9px;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    width: 100%;
+    padding: 5px 0;
+    border: 0;
+    background-color: transparent;
+    line-height: 1;
+    box-sizing: border-box;
+    padding-left: 7px;
+}
+
+.am-list-item.am-input-item {
+    height: 44px;
+    padding-left: 7px;
+}
+
+.upuserimgbtn {
+    width: 30vw;
+    height: 20vh;
+    position: relative;
+    z-index: 100;
+}
