@@ -1,0 +1,95 @@
+.am-carousel-wrap-dot-active>span {
+    background: yellow;
+}
+
+.detail_price_box {
+    width: 95%;
+    height: 4rem;
+    margin: 0 auto;
+    border-bottom: 1px solid #e9e9e9;
+    display: flex;
+    align-items: center;
+}
+
+.detail_price {
+    display: inline-block;
+    font-size: 25px;
+}
+
+.detail_use_box {
+    width: 95%;
+    height: 4rem;
+    margin: 0 auto;
+    border-bottom: 1px solid #e9e9e9;
+    line-height: 2rem;
+}
+
+.detail_use_box span {
+    margin-left: 1rem;
+    color: #8d8d8d;
+}
+
+.detail_use_box div {
+    margin-left: 1rem;
+    color: #8d8d8d;
+}
+
+.detail_introduce_box {
+    width: 95%;
+    height: 4rem;
+    margin: 0 auto;
+    font-size: 12px;
+    color: #8d8d8d;
+}
+
+.detail_cake {
+    width: 100%;
+    height: 2rem;
+    text-align: center;
+}
+
+.detail {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+
+}
+
+.detail_img {
+    width: calc(calc(100% / 3));
+    margin: 5px;
+    /* height: 200px; */
+    box-sizing: border-box;
+    border: 1px solid rgb(158, 154, 154);
+}
+
+.blank {
+    height: 50px;
+}
+
+.detail_button {
+    width: 100%;
+    position: fixed;
+    left: 0;
+    bottom: 20vh;
+    z-index: 3000;
+}
+
+.buy {
+    width: 50%;
+    height: 3rem;
+    line-height: 3rem;
+    display: inline-block;
+    background-color: yellow;
+}
+
+.cellect {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    height: 3rem;
+    line-height: 3rem;
+    display: inline-block;
+    color: white;
+    background-color: rgb(133, 122, 0);
+}

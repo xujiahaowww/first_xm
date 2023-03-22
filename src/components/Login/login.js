@@ -9,8 +9,26 @@ import axios from 'axios'
 import { Toast, AutoCenter, Footer, Form, Input, Button } from 'antd-mobile'
 import { useNavigate } from 'react-router-dom'
 
+
 const App = props => {
-    console.log(window,'wwwwwwww')
+    console.log('1Script开始')
+    setTimeout(() => {
+      console.log('4第一个回调函数，宏任务1')
+      Promise.resolve().then(function () {
+        console.log('5第四个回调函数，微任务2')
+      })
+    }, 0)
+    setTimeout(() => {
+      console.log('6第二个回调函数，宏任务2')
+      Promise.resolve().then(function () {
+        console.log('7第五个回调函数，微任务3')
+      })
+    }, 0)
+    Promise.resolve().then(function () {
+      console.log('2第三个回调函数，微任务1')
+    })
+    console.log('3Script结束')
+
     const [state, setState] = useState({
         imgsrc: '',
         userID: ''

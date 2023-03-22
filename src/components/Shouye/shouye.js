@@ -1,19 +1,23 @@
-/* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { Component } from 'react'
-import { PullToRefresh, SearchBar, Toast, Tabs, Swiper } from 'antd-mobile'
+import { observer } from 'mobx-react'
+import { PullToRefresh, SearchBar, Toast, Tabs, Swiper, Popup } from 'antd-mobile'
 import { sleep } from 'antd-mobile/es/utils/sleep';
 import { SwiperRef } from 'antd-mobile/es/components/swiper'
+import Detail from './detail'
+import "video-react/dist/video-react.css"
+import { Player, ControlBar } from 'video-react'
 // import io from 'socket.io-client'
 import axios from 'axios'
 import './shouye.css'
 import { addToCart } from '../../redux/action/cart-actions';
 import { updateCart } from '../../redux/action/cart-actions';
 import { deleteFromCart } from '../../redux/action/cart-actions';
-import store from '../../redux/store'
+// import store from './store'
 
 
+@observer
 class Shouye extends Component {
   constructor(props) {
     super(props);
@@ -35,12 +39,29 @@ class Shouye extends Component {
     //   wordList.push(data)
     //   this.setState({ wordList });
     // })
+    // console.log(store,'storestorestore')
+    this.throttle()
     this.getMessage()
     setTimeout(() => {
       this.setState({
         lunbodata: ['https://static.mcake.com/goods/xingtaochulian/R8006/middle/1.jpg', 'https://static.mcake.com/goods/xingtaochulian/R8006/middle/3.jpg', 'https://static.mcake.com/goods/xingtaochulian/R8006/middle/3.jpg', 'https://static.mcake.com/goods/tianyuanshengridangao/R8005/middle/2.jpg'],
       });
     }, 100);
+
+  }
+
+  throttle = (fn, delay) => {
+    let valid = true;
+    return function () {
+      if (valid) {
+        console.log(valid, 'valid')
+        setTimeout(() => {
+          fn.apply(this, []);
+          valid = true;
+        }, delay)
+        valid = false;
+      }
+    }
   }
 
   getMessage = () => {
@@ -60,6 +81,10 @@ class Shouye extends Component {
     })
   }
 
+  xiangQing = (item, index) => {
+    console.log(item, index)
+    this.setState({ xqvisibe: true, xqitem: item })
+  }
   render() {
     const statusRecord = {
       pulling: '用力拉',
@@ -102,6 +127,16 @@ class Shouye extends Component {
             <div className='search'>
               <SearchBar placeholder='请输入内容' showCancelButton />
             </div>
+            {/* <Player
+              ref={player => {
+                this.player = player;
+              }}
+              preload='none'
+            >
+              
+              <ControlBar autoHide={false} className="my-class" />
+              <source src={'https://media.w3.org/2010/05/sintel/trailer_hd.mp4'} />
+            </Player> */}
             <div>
               <Tabs
                 activeKey={tabItems[this.state.activeIndex].key}
@@ -134,14 +169,14 @@ class Shouye extends Component {
                   </div>
                   <>
                     <div
-                      style={{ 
-                          marginTop: '10px',
-                          marginLeft: '10px',
-                          marginRight: '10px',
-                          borderRadius: 5,
-                          height: "117px",
-                          background: `url(${this.state.dangji.imgsrc}) center center `
-                          }} >
+                      style={{
+                        marginTop: '10px',
+                        marginLeft: '10px',
+                        marginRight: '10px',
+                        borderRadius: 5,
+                        height: "117px",
+                        background: `url(${this.state.dangji.imgsrc}) center center `
+                      }} >
                       <div style={{
                         width: '30%',
                         height: '100%',
@@ -151,17 +186,25 @@ class Shouye extends Component {
                     {this.state.tupianArr.map((item, index) => {
                       return (
                         //  console.log({item, index})
-                        <div key={index} className='tupian' >
-                          <div style={{ border: "1px,black" }}>
-                            <img src={item.imgsrc} 
-                            style={{
-                               height: "30%", 
-                               width: "100%", 
-                               position: "relative", 
-                               zIndex: 10,
-                               borderRadius: 10,
-                               marginTop: '10px'
-                               }} />
+                        <div
+                          key={index}
+                          className='tupian' >
+                          <div
+                            style={{ border: "1px,black" }}
+                            onClick={() => {
+
+                              this.xiangQing(item, index)
+                            }}
+                          >
+                            <img src={item.imgsrc}
+                              style={{
+                                height: "30%",
+                                width: "100%",
+                                position: "relative",
+                                zIndex: 10,
+                                borderRadius: 10,
+                                marginTop: '10px'
+                              }} />
                           </div>
                           <div>
                             <span>{item.title}</span>
@@ -171,13 +214,35 @@ class Shouye extends Component {
                       )
                     })}
                   </>
+                  <Popup
+                    // position='right'
+                    visible={this.state.xqvisibe}
+                    onClose={() => {
+                      this.setState({ xqvisibe: false })
+                    }}
+                    onMaskClick={() => {
+                      this.setState({ xqvisibe: false })
+                    }}
+                    showCloseButton
+                    bodyStyle={{ width: '100vw', height: '60vh' }}
+                  >
+                    {this.state.xqvisibe && (
+                      <div style={{ overflowY: 'scroll', height: '60vh' }}>
+                        <Detail message={this.state.xqitem} />
+                      </div>
+                    )}
+                  </Popup>
                 </Swiper.Item>
 
 
 
                 {/* 预约服务 */}
                 <Swiper.Item>
-                  <div className='content'>西红柿</div>
+                  <div className='content' onClick={() => {
+                    let fn = this.throttle(console.log('11111'), 2000)
+
+                    fn(console.log('22222', 1000))
+                  }}>西红柿</div>
                 </Swiper.Item>
               </Swiper>
             </div>
