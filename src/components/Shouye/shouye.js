@@ -14,10 +14,10 @@ import './shouye.css'
 import { addToCart } from '../../redux/action/cart-actions';
 import { updateCart } from '../../redux/action/cart-actions';
 import { deleteFromCart } from '../../redux/action/cart-actions';
-// import store from './store'
+import store from './store'
 
 
-@observer
+
 class Shouye extends Component {
   constructor(props) {
     super(props);
