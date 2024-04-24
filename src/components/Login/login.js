@@ -44,7 +44,7 @@ const App = props => {
         })
     }, [])
     useEffect(() => {
-        console.log('mima改变执行')
+        console.log('密码改变执行')
     }, [state.password])
     // 改变验证图片
     const changeVerf = () => {
