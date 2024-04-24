@@ -1,20 +1,20 @@
 import React, { Component } from 'react'
-import { ImageUploader, Badge, Toast, TabBar } from 'antd-mobile'
+import { ImageUploader, Badge, Toast, TabBar, List } from 'antd-mobile'
 import {
   AppOutline,
   MessageOutline,
-  MessageFill,
+  PayCircleOutline,
   UnorderedListOutline,
-  UserOutline,
+  SetOutline,
 } from 'antd-mobile-icons'
-// import io from 'socket.io-client'
-// import Axios from 'axios'
+import Utils from '../Login/function'
 import './wode.css'
 import { addToCart } from '../../redux/action/cart-actions';
 import { updateCart } from '../../redux/action/cart-actions';
 import { deleteFromCart } from '../../redux/action/cart-actions';
 import store from '../../redux/store'
 
+let userinfo = Utils.lcStorage.getItem('userinfo') || {}
 class Wode extends Component {
   constructor(props) {
     super(props);
@@ -26,6 +26,7 @@ class Wode extends Component {
   }
 
   componentDidMount() {
+    console.log(userinfo, 'userinfouserinfo')
     let canvas = document.getElementById("myCanvas");
     let ctx = canvas.getContext("2d");
     // ctx.fillRect(50, 50, 100, 100);
@@ -99,29 +100,44 @@ class Wode extends Component {
     init();
     animate();
     canvas.addEventListener("click", (event) => {
-      const x = event.x ;
+      const x = event.x;
       const y = event.y;
-        for (let i = 0; i < 5; i++) {
-          const radius = Math.random() * 20 + 10;
-          const color = {
-            r: Math.floor(Math.random() * 255),
-            g: Math.floor(Math.random() * 255),
-            b: Math.floor(Math.random() * 255),
-          };
-          // console.log(x, y)
-          const particle = new Particle(x, y, radius, color, 5);
-          particleArray.push(particle);
-        }
-      });
-    }
+      for (let i = 0; i < 5; i++) {
+        const radius = Math.random() * 20 + 10;
+        const color = {
+          r: Math.floor(Math.random() * 255),
+          g: Math.floor(Math.random() * 255),
+          b: Math.floor(Math.random() * 255),
+        };
+        // console.log(x, y)
+        const particle = new Particle(x, y, radius, color, 5);
+        particleArray.push(particle);
+      }
+    });
+  }
 
   render() {
 
-      return(
+    return (
       <>
-    <div className='container' style={{ height: '1200px' }} >
-      <canvas id="myCanvas" width="1000" height="1200" style={{ }}></canvas>
-      {/* <div class="circle">
+        <div className='container' style={{ height: '1200px' }} >
+          <canvas id="myCanvas" width="1000" height="600"></canvas>
+          <img src=''></img>
+          <div>
+            <List>
+              <List.Item prefix={<UnorderedListOutline />} onClick={() => { }}>
+                账单
+              </List.Item>
+              <List.Item prefix={<PayCircleOutline />} onClick={() => { }}>
+                总资产
+              </List.Item>
+              <List.Item prefix={<SetOutline />} onClick={() => { }}>
+                设置
+              </List.Item>
+            </List>
+          </div>
+
+          {/* <div class="circle">
             <div class="inner-box">
               内部盒子
             </div>
@@ -136,7 +152,7 @@ class Wode extends Component {
             </div>
           </div> */}
 
-    </div>
+        </div>
       </>
     )
   }
