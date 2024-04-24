@@ -1,0 +1,20 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 100vh;
+    background: #e8e3e3;
+}
+.search2{
+    position: fixed;
+    width: 100vw;
+    top: 0px;
+    background-color: #f5f5f5;
+}
+.card {
+    height: 100px;
+    background-color: rgb(76, 163, 163);
+    margin: 10px;
+    border: 1px solid #191919;
+    border-radius: 5px;
+}

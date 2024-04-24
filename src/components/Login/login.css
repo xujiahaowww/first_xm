@@ -1,35 +1,46 @@
-
 .div-relative {
-    position: relative;
+    display: flex;
+    flex-direction: column;
+    /* display: -webkit-flex; */
+    /* Safari */
     color: #000;
-    border: 1px solid #000;
+
 }
 
-.div-a {
+.denglupicture {
+    /* display: flex; */
+    height: 60vh;
+    width: 100%;
+    position: relative;
+    /* flex-direction: column; */
+    background-color: #87bff7;
+}
+
+.dengluword {
+    font-size: 60px;
+    width: 100%;
     position: absolute;
-    left: 15%;
-    top: 50%;
-    color: aliceblue;
-    font-size: 5em;
+    top: 10%;
+    flex-direction: column;
 }
 
-.div-b {
-    position: absolute;
+.caozuoquyu {
+    height: 40vh;
+    /* display: flex; */
+    /* width: 100%; */
+    flex: 1;
+    /* flex-direction: column; */
 }
 
-.div-c {
-    position: absolute;
-    right: 0%;
+.denglu {
+    position: fixed;
+    bottom: 1px;
+    width: 100%;
+}
+.headphotosc{
+    height: 110px;
 }
 
-/* .demoTitle:before,
-.demoTitle:after {
-  border-bottom: none;
-}
-.loginbtn {
-   width: 60px;
-   margin: 0 auto;
-} */
 .Login_Register_page {
     width: 100vw;
     height: 100vh;
@@ -43,31 +54,13 @@
 }
 
 .Login_Register_item1 {
-    /* color: red; */
 }
 
-.Login_Register_item2 {
-    /* color: #000; */
-}
+.Login_Register_item2 {}
 
 .Login_Register_item {
-    width: 45vw;
-    display: block;
-    outline: 0 none;
-    box-sizing: border-box;
-    padding: 0;
-    text-align: center;
-    font-size: 16px;
-    height: 10vw;
-    line-height: 30px;
-    color: black;
-    background-color: white;
-    border: 1PX solid #ddd;
-    /* border-radius: 1vw; */
-    margin-top: 10vw;
-    margin-bottom: 1vw;
-    position: relative;
-    z-index: 100;
+    display: flex;
+    flex-direction: row;
 }
 
 .am-button {
@@ -168,14 +161,16 @@
     text-align: right;
     margin-right: 20px;
 }
-.zhuche{
-    color: rgb(189, 192, 255);
+
+.zhuche {
+    /* color: rgb(189, 192, 255); */
     /* position: absolute; */
     margin-right: 10px;
     /* height: 20px; */
     margin-bottom: 10px;
     text-align: right;
 }
+
 .toLogin_btn {
     width: 90vw;
     height: 6vh;

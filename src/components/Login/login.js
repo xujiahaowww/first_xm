@@ -2,40 +2,27 @@
 /* eslint-disable eqeqeq */
 /* eslint-disable no-useless-concat */
 
-import { useState, useEffect, useRef, MutableRefObject } from "react"
+import { useState, useEffect, useRef, MutableRefObject, useCallback } from "react"
 import './login.css'
 import loginTp from '../img/loginjpg.jpg'
-import axios from 'axios'
 import { Toast, AutoCenter, Footer, Form, Input, Button } from 'antd-mobile'
 import { useNavigate } from 'react-router-dom'
+import Utils from './function'
+import store from "../../redux/store"
+import { adduserInfo, addToCart } from '../../redux/action/cart-actions'
+import { debounce } from 'lodash'
 
-
+let userinfo = Utils.lcStorage.getItem('userinfo') || {}
+console.log(userinfo,'userinfouserinfouserinfo')
 const App = props => {
-    console.log('1Script开始')
-    setTimeout(() => {
-      console.log('4第一个回调函数，宏任务1')
-      Promise.resolve().then(function () {
-        console.log('5第四个回调函数，微任务2')
-      })
-    }, 0)
-    setTimeout(() => {
-      console.log('6第二个回调函数，宏任务2')
-      Promise.resolve().then(function () {
-        console.log('7第五个回调函数，微任务3')
-      })
-    }, 0)
-    Promise.resolve().then(function () {
-      console.log('2第三个回调函数，微任务1')
-    })
-    console.log('3Script结束')
-
     const [state, setState] = useState({
-        imgsrc: '',
-        userID: ''
-    })//数组前面是读，后面是写，叫法无所谓
-    const [zhanghao, setZhmm] = useState({
-        zhanghao: null,
-        mima: null
+        imgsrc: userinfo.imgsrc || '',
+        userID: userinfo.userID || '',
+        phoneNumber: userinfo.phoneNumber || null,
+        password: userinfo.password || null,
+        isLogin: userinfo.isLogin || false,
+        name: userinfo.name || '',
+
     })//数组前面是读，后面是写，叫法无所谓
     const [verf, setVerf] = useState({
         yanzhengimg: '',
@@ -45,8 +32,8 @@ const App = props => {
     const navigate = useNavigate()//useNavigate需要在函数组件内部使用
 
     useEffect(() => {
-        var url = "http://localhost:7001/verif"
-        axios.post(url, {}, {
+        var url = `http://localhost:3007/api/verif`
+        axios.get(url, {}, {
             withCredentials: true
         }).then((res) => {
             console.log(res, 'resssss')
@@ -55,21 +42,14 @@ const App = props => {
                 yanzhengwenzi: res.data.text
             })
         })
-        console.log(verf.yanzhengwenzi, 'verfverf')
-        // var unsubscribe = store.subscribe(() => {
-        //     setSj({ sj: store.getState().products.cart })
-        // }
-        // );
-        // store.dispatch(addToCart(`${state.sj.length + 1}`, 1, 250))
-        // unsubscribe();
     }, [])
     useEffect(() => {
         console.log('mima改变执行')
-    }, [zhanghao.mima])
+    }, [state.password])
     // 改变验证图片
     const changeVerf = () => {
-        var url = "http://localhost:7001/verif"
-        axios.post(url, {}, {
+        var url = `http://localhost:3007/api/verif`
+        axios.get(url, {}, {
             withCredentials: true
         }).then((res) => {
             console.log(res)
@@ -79,136 +59,169 @@ const App = props => {
             })
         })
     }
-
+    const input = async (value) => {
+        await setState({
+            ...state,
+            phoneNumber: value,
+        })
+    }
+    // let delayFn = (value)=>{
+    //     useCallback(
+    //         Utils.debounce(input(value), 2000)
+    //     )
+    // } 
     //登陆确定
     const queDing = () => {
-        let userinfo = { phoneNumber: zhanghao.zhanghao, password: zhanghao.mima }
-        if (!zhanghao.zhanghao) {
+        console.log(verf.yanzhengshuru, state)
+        let userinfo = { ...state }
+        if (!state.phoneNumber) {
             Toast.show('请输入账号!!!', 2)
             return
         }
-        if (!zhanghao.mima) {
+        if (!state.password) {
             Toast.show('请输入密码!!!', 2)
             return
         }
-        if (verf.yanzhengshuru.toLowerCase() !== verf.yanzhengwenzi.toLowerCase()) {
-            Toast.show('验证码错误!!!', 2)
-            return
-        }
+        // if (!verf.yanzhengshuru) {
+        //     Toast.show('请输入验证码!!!', 2)
+        //     return
+        // }
+        // if (verf.yanzhengshuru.toLowerCase() !== verf.yanzhengwenzi.toLowerCase()) {
+        //     Toast.show('验证码错误!!!', 2)
+        //     return
+        // }
         console.log(userinfo, 'userinfo')
-        let url = "http://localhost:7001/login" // http://10.104.2.53:7001/login
-        axios.post(url, userinfo, {
-            withCredentials: true
-        }).then((res) => {
+        let url = "http://localhost:3007/api/login" 
+        axios.post(url, { phoneNumber: state.phoneNumber, password: state.password }).then((res) => {
             console.log(res, 'ressss')
             if (res.data.code == 4001) {
                 Toast.show({
                     icon: 'fail',
                     content: `${res.data.info}`,
                 })
-                this.changeRegister();
             }
             if (res.data.code == 4003) {
                 Toast.show('密码或用户名错误!!!', 2);
             }
             if (res.data.info == "登录成功") {
                 Toast.show('登录成功', 2);
-                // this.props.history.back();
-                setState({
-                    imgsrc: res.data.imgsrc,
-                    userID: res.data.userID
-                })
-                localStorage.setItem("isLogin", true)
-                localStorage.setItem("phoneNumber", zhanghao.zhanghao)
-                localStorage.setItem("imgsrc", state.imgsrc)
-                localStorage.setItem("userID", state.userID)
+                new Promise(
+                    (resolve, reject) => {
+                        setState({
+                            ...state,
+                            imgsrc: res.data.userData.imgsrc,
+                            userID: res.data.userData.userID,
+                            name: res.data.userData.name,
+                            sex: res.data.userData.sex
+                        })
+                        resolve(state)
+                    }
+                ).then(
+                    (v) => {
+                        store.dispatch(adduserInfo({ ...v }))
+                        Utils.lcStorage.setItem('userinfo',
+                            {
+                                phoneNumber: state.phoneNumber,
+                                password: state.password,
+                                imgsrc: state.imgsrc,
+                                userID: state.userID,
+                                name: state.name,
+                                sex: state.sex,
+                                isLogin: true
+                            })
+                    }
+                )
                 navigate('/table')
             }
 
         })
 
     }
-
     const zhuChe = () => {
-        // store.dispatch(addToCart('2', 2, 110));
+        store.dispatch(adduserInfo('2', 2, 110));
         navigate('/zhuche' + '?bbb=456')
-
     }
+
     return (
         <div>
             <div class="div-relative" >
-                <div class="div-b">
-                    <img
-                        src={loginTp}
-                        style={{ width: '100%' ,height: '65vh'}}
-                    />
-                    <Form layout='horizontal'>
-                        <Form.Item label='用户名' name='username'>
-                            <Input
-                                placeholder='请输入用户名'
-                                clearable
-                                onChange={async (value) => {
-                                    await setZhmm({
-                                        ...zhanghao,
-                                        zhanghao: value,
-
-                                    })
-                                    console.log(zhanghao, 'zhanghao')
-                                }}
-                            />
-                        </Form.Item>
-                        <Form.Item
-                            label='密码'
-                            name='password'
-                        >
-                            <Input
-                                placeholder='请输入密码'
-                                clearable
-                                type={'text'}
-                                onChange={async (value) => {
-                                    await setZhmm({
-                                        ...zhanghao,
-                                        mima: value,
-
-                                    })
-                                    console.log(zhanghao, 'zhanghao')
-                                }}
-                            />
-                        </Form.Item>
-                        <Form.Item
-                            label='验证码'
-                            name='verf'
-                        >
-                            <Input
-                                onChange={(value) => {
-                                    setVerf({
-                                        ...verf,
-                                        yanzhengshuru: value,
-
-                                    })
-                                }}
-                                placeholder="请输入验证码"
-                            ></Input>
-                        </Form.Item>
-                    </Form>
-                    <div className="yanzhengma">
-                        <span className="yanzhengma" onClick={() => { changeVerf() }} dangerouslySetInnerHTML={{ __html: verf.yanzhengimg }}></span>
+                <div class="denglupicture">
+                    <div class="dengluword">
+                        <AutoCenter>登陆界面</AutoCenter>
                     </div>
-                    <div className="zhuche" >
+                    {/* <img
+                        src={loginTp}
+                        style={{ width: '100%', height: '65vh' }}
+                    /> */}
+                </div>
+                <div className="caozuoquyu">
+                    <div className="yhmandmm">
+                        <Form layout='horizontal'>
+                            <Form.Item label='手机号' name='name'>
+                                <Input
+                                    defaultValue={state.phoneNumber || ''}
+                                    placeholder='请输入手机号'
+                                    clearable
+                                    onChange={async (value) => {
+                                        input(value)
+                                    }}
+                                />
+                            </Form.Item>
+                            <Form.Item
+                                label='密码'
+                                name='password'
+                            >
+                                <Input
+                                    defaultValue={state.password || ''}
+                                    placeholder='请输入密码'
+                                    clearable
+                                    type={'text'}
+                                    onChange={async (value) => {
+                                        await setState({
+                                            ...state,
+                                            password: value,
+
+                                        })
+                                        console.log(state, 'phoneNumber')
+                                    }}
+                                />
+                            </Form.Item>
+                            <div className="Login_Register_item">
+                                <Form.Item
+                                    label='验证码'
+                                    name='verf'
+                                    className="Login_Register_item1"
+                                >
+                                    <Input
+                                        defaultValue={''}
+                                        onChange={(value) => {
+                                            setVerf({
+                                                ...verf,
+                                                yanzhengshuru: value,
+                                            })
+                                        }}
+                                        placeholder="请输入验证码"
+                                    ></Input>
+                                </Form.Item>
+                                <div style={{ width: '130px', height: '50px', backgroundColor: verf.yanzhengimg ? 'white' : '#ece2e2' }}>
+                                    <span className="Login_Register_item2" onClick={() => { changeVerf() }} dangerouslySetInnerHTML={{ __html: verf.yanzhengimg }}></span>
+                                </div>
+                            </div>
+                        </Form>
+                    </div>
+                    <div className="yanzhengma">
                         <span onClick={() => { zhuChe() }}>
                             注册
                         </span>
                     </div>
-                    <div style={{ width: '100%' }}>
+                    <div className="denglu">
                         <Button block color='primary' size='large' onClick={() => { queDing() }}>
                             登陆
                         </Button>
                     </div>
 
                 </div>
-                <div class="div-a">
-                    <AutoCenter>登陆界面</AutoCenter>
-                </div>
+
             </div>
         </div>
     )

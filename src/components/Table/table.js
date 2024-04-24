@@ -34,6 +34,7 @@ class Table extends Component {
         console.log('页面加载')
     }
     componentDidMount() {
+        this.pageChange('personalCenter')
         // let { socket, wordList } = this.state;
         // socket.on('connect', (data) => {
         //   console.log(data)
@@ -48,7 +49,7 @@ class Table extends Component {
     }
 
     pageChange = (key) => {
-       
+
         let compont
         switch (key) {
             case 'home':
@@ -64,7 +65,7 @@ class Table extends Component {
                 compont = <Wode />
                 break;
         }
-        this.setState({compont})
+        this.setState({ compont })
     }
     render() {
         let { userNameIpt, userSay, hide, wordList, userName } = this.state;
@@ -101,6 +102,7 @@ class Table extends Component {
                     <TabBar
                         className='footer'
                         onChange={value => this.pageChange(value)}
+                        defaultActiveKey={'personalCenter'}
                     >
                         {tabs.map(item => (<TabBar.Item
                             key={item.key}

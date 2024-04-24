@@ -3,14 +3,14 @@ import { observable, action, runInAction, toJS } from 'mobx'
 import Utils from '../Login/function'
 class Store {
     // 项目编号查询
-    @observable zyxx = new Array
+    @observable dbxx = new Array
     @action getChange = params => {
         try {
             runInAction(() => {
-                Utils.promise('/Zzjg/dept/person$m=query',params).then(v => {
+                Utils.promise('/DM/xxwh/gr/ygsjk$m=Query.service',params).then(v => {
                     if (v.data) {
-                        this.zyxx = v.data.results
-                        console.log(this.zyxx, '33333333')
+                        this.dbxx = v.data.results
+                        console.log(this.dbxx, '33333333')
                     }
                 })
             })

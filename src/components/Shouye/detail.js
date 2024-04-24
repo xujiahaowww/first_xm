@@ -6,7 +6,6 @@ import axios from "axios";
 import "./detail.css"
 import { Modal, Button, Toast, } from 'antd-mobile';
 
-
 class DetailPage extends React.Component {
     constructor(props) {
         super(props)
@@ -23,13 +22,13 @@ class DetailPage extends React.Component {
     }
     componentDidMount() {
         console.log("购物车测试", this.props.message)
-        axios.post("http://localhost:7001/detailimg", {
-            withCredentials: true,
-            id: this.props.message?.foodID
-        }).then((res) => {
-            console.log(res, 'ressss')
-            this.setState({ foodDetailImg: res.data })
-        })
+        // axios.post("http://localhost:7001/detailimg", {
+        //     withCredentials: true,
+        //     id: this.props.message?.foodID
+        // }).then((res) => {
+        //     console.log(res, 'ressss')
+        //     this.setState({ foodDetailImg: res.data })
+        // })
         this.setState({
             foodDetail: this.props.message,
             phoneNumber: localStorage.getItem("phoneNumber")

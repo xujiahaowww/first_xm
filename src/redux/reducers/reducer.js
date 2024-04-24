@@ -1,13 +1,26 @@
 /* eslint-disable import/no-anonymous-default-export */
-import { ADD_TO_CART, UPDATE_CART, DELETE_FROM_CART } from '../action/cart-actions';
+import {
+    ADD_TO_USERINFO,
+    ADD_TO_CART,
+    UPDATE_CART,
+    DELETE_FROM_CART
+} from '../action/cart-actions';
 
 const initialState = {
-    cart: []
+    userData: {},
+    cart: [],
 }
-
 export function Int(state = initialState, action) {
-    console.log(action,'actionaction')
+    console.log(action, 'actionaction')
     switch (action.type) {
+        case ADD_TO_USERINFO: {
+            console.log('12312312312')
+            return {
+                ...state,
+                userData: { ...state.userData, userinfo: action.userinfo }
+            }
+        }
+
         case ADD_TO_CART: {
             return {
                 ...state,

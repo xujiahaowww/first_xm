@@ -4,7 +4,23 @@
   background: #dce2e5;
 }
 
-.search {
+.to_top {
+  width: 30px;
+  height: 40px;
+  padding: 20px;
+  font: 14px/20px arial;
+  text-align: center;
+  background: #06c;
+  opacity: 0.5;
+  position: fixed;
+  top: 80%;
+  left: 80%;
+  cursor: pointer;
+  color: #fff;
+  transition: 2s;
+}
+
+.search1 {
   margin-top: 10px;
   margin-left: 5px;
   margin-right: 5px;
@@ -35,6 +51,8 @@
 }
 
 .tupian {
+  /* display: flex;
+  flex-direction: row; */
   float: left;
   width: 45%;
   height: 37%;
@@ -50,21 +68,43 @@
   bottom: 0;
   left: 0;
 }
-.one{
-  width:100px;
-	height:100px;
-	background:red;
-	animation:myfirst 5s;
-  -webkit-animation:myfirst 5s;
-}
-@keyframes myfirst
-{
-	from {background:red;}
-	to {background:yellow;}
+
+.one {
+  width: 100px;
+  height: 100px;
+  background: red;
+  animation: myfirst 5s;
+  -webkit-animation: myfirst 5s;
 }
 
-@-webkit-keyframes myfirst /* Safari and Chrome */
-{
-	from {background:red;}
-	to {background:yellow;}
+@keyframes myfirst {
+  from {
+    background: red;
+  }
+
+  to {
+    background: yellow;
+  }
+}
+
+@-webkit-keyframes myfirst {
+  from {
+    background: red;
+  }
+
+  to {
+    background: yellow;
+  }
+}
+
+.yuyuecontent {
+  display: flex;
+  flex-direction: column;
+
+}
+
+.yuyuetop {
+  height: 200px;
+  width: 100%;
+  background-color: #06c;
 }

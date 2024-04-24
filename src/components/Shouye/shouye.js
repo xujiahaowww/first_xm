@@ -2,12 +2,16 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { Component } from 'react'
 import { observer } from 'mobx-react'
-import { PullToRefresh, SearchBar, Toast, Tabs, Swiper, Popup } from 'antd-mobile'
+import ReactDom from 'react-dom'
+import { toJS } from 'mobx'
+import { PullToRefresh, SearchBar, Toast, Tabs, Swiper, Popup, DotLoading } from 'antd-mobile'
 import { sleep } from 'antd-mobile/es/utils/sleep';
 import { SwiperRef } from 'antd-mobile/es/components/swiper'
 import Detail from './detail'
 import "video-react/dist/video-react.css"
+import Utils from '../Login/function'
 import { Player, ControlBar } from 'video-react'
+import YyCalendar from './yyCalender'
 // import io from 'socket.io-client'
 import axios from 'axios'
 import './shouye.css'
@@ -16,11 +20,14 @@ import { updateCart } from '../../redux/action/cart-actions';
 import { deleteFromCart } from '../../redux/action/cart-actions';
 import store from './store'
 
+let cdPage = 1
+let cdSize = 10
 
-
+@observer
 class Shouye extends Component {
   constructor(props) {
     super(props);
+    this.myRef = React.createRef();
     this.state = {
       // socket: io('127.0.0.1:7001'),//配置socket
       userName: '',//进入聊天室之后保存的用户名
@@ -28,7 +35,8 @@ class Shouye extends Component {
       activeIndex: 0,
       lunbodata: [],
       tupianArr: [],
-      dangji: {}
+      dangji: {},
+      scrollTop: false
     }
   }
 
@@ -39,52 +47,87 @@ class Shouye extends Component {
     //   wordList.push(data)
     //   this.setState({ wordList });
     // })
-    // console.log(store,'storestorestore')
-    this.throttle()
+
     this.getMessage()
+
     setTimeout(() => {
+      window.addEventListener('scroll', this.handleScroll, true)
       this.setState({
         lunbodata: ['https://static.mcake.com/goods/xingtaochulian/R8006/middle/1.jpg', 'https://static.mcake.com/goods/xingtaochulian/R8006/middle/3.jpg', 'https://static.mcake.com/goods/xingtaochulian/R8006/middle/3.jpg', 'https://static.mcake.com/goods/tianyuanshengridangao/R8005/middle/2.jpg'],
       });
     }, 100);
-
   }
-
-  throttle = (fn, delay) => {
-    let valid = true;
-    return function () {
-      if (valid) {
-        console.log(valid, 'valid')
-        setTimeout(() => {
-          fn.apply(this, []);
-          valid = true;
-        }, delay)
-        valid = false;
-      }
+  componentWillUnmount() {
+    window.removeEventListener('scroll', this.handleScroll, true);
+  }
+  handleScroll = () => {
+    var scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+    var windowHeight = document.documentElement.clientHeight || document.body.clientHeight;
+    var scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight;
+    if (1200 < Math.ceil(scrollTop) && Math.ceil(scrollTop) < 1300) {
+      this.setState({ scrollTop: true })
+    } else if (1200 > Math.ceil(scrollTop)) {
+      this.setState({ scrollTop: false })
+    }
+    if (Math.ceil(scrollTop) + windowHeight >= scrollHeight) {
+      //考虑到滚动的位置一般可能会大于一点可滚动的高度，所以这里不能用等于
+      this.Fn()
     }
   }
-
+  function = () => {
+    console.log(222222)
+    cdPage += 1
+    this.getMessage()
+  }
+  Fn = Utils.throttle(this.function, 3000)
   getMessage = () => {
-    let url = "http://localhost:7001/home"
-    let url2 = "http://localhost:7001/dangji"
-    axios.post(url, {
-      withCredentials: true
-    }).then((res) => {
-      console.log(res, 'ressss')
-      this.setState({ tupianArr: res.data })
+    Toast.show({
+      icon: 'loading',
+      content: '加载中…',
     })
-    axios.post(url2, {
-      withCredentials: true
-    }).then((res) => {
-      this.setState({ dangji: res.data })
-      console.log(this.state.dangji, 'dangjidangjidangji')
-    })
+    let sjCl = () => {
+      if (cdPage === 1) {
+        this.setState({ tupianArr: store.zyxx, dangji: store.zyxx[0] }, () => {
+        })
+      } else {
+        let { tupianArr } = this.state
+        let newtupianArr = tupianArr.concat(store.zyxx)
+        this.setState({ tupianArr: newtupianArr })
+      }
+      Toast.clear()
+    }
+    new Promise(function (resolve, reject) {
+      setTimeout(function () {
+        store.getChange({
+          id: 8666,
+          mc: '',
+          product_id: "5101040002",
+          page: cdPage,
+          size: cdSize,
+        })
+        resolve();
+      }, 100);
+    }).then(
+      function () {
+        setTimeout(function () {
+          sjCl()
+        }, 2000);
+      }
+    )
   }
 
   xiangQing = (item, index) => {
     console.log(item, index)
     this.setState({ xqvisibe: true, xqitem: item })
   }
+  // 滚动监听
+  scrollListener = event => {
+    let height1 = this.myRef.current.clientHeight  // 可以得到我们设置的高度 (不包括滚动的高度)
+    let height2 = this.myRef.current.scrollTop  // 当滚动时被卷去的高度
+    let height3 = this.myRef.current.scrollHeight  // 全部的高度 包括滚动的高度
+    console.log(height1, height2, height3)
+  }
+
   render() {
     const statusRecord = {
       pulling: '用力拉',
@@ -117,26 +160,18 @@ class Shouye extends Component {
     ))
     return (
       <>
-        <div className='container'>
+        <div className='container'
+        >
           <PullToRefresh onRefresh={async () => {
+            cdPage = 1
+            this.getMessage()
             await sleep(1000);
-            // this.setState([...getNextData(), ...this.state]);
           }} renderText={status => {
             return <div>{statusRecord[status]}</div>;
           }}>
-            <div className='search'>
+            <div className='search1'>
               <SearchBar placeholder='请输入内容' showCancelButton />
             </div>
-            {/* <Player
-              ref={player => {
-                this.player = player;
-              }}
-              preload='none'
-            >
-              
-              <ControlBar autoHide={false} className="my-class" />
-              <source src={'https://media.w3.org/2010/05/sintel/trailer_hd.mp4'} />
-            </Player> */}
             <div>
               <Tabs
                 activeKey={tabItems[this.state.activeIndex].key}
@@ -156,6 +191,15 @@ class Shouye extends Component {
                 defaultIndex={this.state.activeIndex}
                 onIndexChange={index => {
                   this.setState({ activeIndex: index })
+                  if (index === 1) {
+                    window.removeEventListener('scroll', this.handleScroll, true);
+                    document.getElementsByClassName('adm-swiper-track-inner')[0].style.height
+                      = window.screen.availHeight + "px"
+                  } else {
+                    window.addEventListener('scroll', this.handleScroll, true)
+                    document.getElementsByClassName('adm-swiper-track-inner')[0].style.height
+                      = ''
+                  }
                 }}
               >
                 {/* 首页 */}
@@ -175,28 +219,26 @@ class Shouye extends Component {
                         marginRight: '10px',
                         borderRadius: 5,
                         height: "117px",
-                        background: `url(${this.state.dangji.imgsrc}) center center `
+                        background: `url(${this.state.dangji?.headphoto}) center center `
                       }} >
                       <div style={{
                         width: '30%',
                         height: '100%',
                       }} />
-                      <span style={{ position: "relative", left: "30%", width: "40%", top: "-69px", fontSize: "15px" }}>{this.state.dangji?.title}</span>
+                      <span style={{ position: "relative", left: "30%", width: "40%", top: "-69px", fontSize: "15px" }}>{this.state.dangji?.xingming}</span>
                     </div>
                     {this.state.tupianArr.map((item, index) => {
                       return (
-                        //  console.log({item, index})
                         <div
                           key={index}
                           className='tupian' >
                           <div
                             style={{ border: "1px,black" }}
                             onClick={() => {
-
                               this.xiangQing(item, index)
                             }}
                           >
-                            <img src={item.imgsrc}
+                            <img src={item.headphoto || 'https://static.mcake.com/goods/tianyuanshengridangao/R8005/middle/2.jpg'}
                               style={{
                                 height: "30%",
                                 width: "100%",
@@ -207,8 +249,8 @@ class Shouye extends Component {
                               }} />
                           </div>
                           <div>
-                            <span>{item.title}</span>
-                            <span>￥{item.price}</span>
+                            <span>{item.xingming}</span>
+                            <span>￥{item.id}</span>
                           </div>
                         </div>
                       )
@@ -234,19 +276,41 @@ class Shouye extends Component {
                   </Popup>
                 </Swiper.Item>
 
-
-
                 {/* 预约服务 */}
                 <Swiper.Item>
-                  <div className='content' onClick={() => {
-                    let fn = this.throttle(console.log('11111'), 2000)
+                  <div className='yuyuecontent'>
+                    <div className='yuyuetop'>
 
-                    fn(console.log('22222', 1000))
-                  }}>西红柿</div>
+                    </div>
+                    <div className='yuyuedate'>
+                      <YyCalendar
+
+                      />
+                    </div>
+                  </div>
                 </Swiper.Item>
               </Swiper>
             </div>
           </PullToRefresh>
+
+          {this.state.scrollTop && (
+            <div className="to_top" ref={this.myRef} onClick={() => {
+              const getTargetDOM = ReactDom.findDOMNode(this.myRef.current);
+              console.log(window.pageYOffset, 'getTargetDOMgetTargetDOM')
+              let scrollTop = window.pageYOffset;
+              // 每0.01秒向上移动100像素，直到小于或等于0结束
+              let timer = setInterval(() => {
+                scrollTop -= 100;
+                // 为负数，浏览器会不处理得
+                window.scrollTo(0, scrollTop);
+                if (scrollTop <= 0) {
+                  clearInterval(timer)
+                }
+              }, 10)
+              // document.documentElement.scrollTop = document.body.scrollTop = 0
+              this.setState({ scrollTop: false })
+            }}>返回顶部</div>
+          )}
         </div>
       </>
     )

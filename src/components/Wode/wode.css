@@ -1,0 +1,47 @@
+.circle {
+    width: 300px;
+    height: 300px;
+    /* background-color: rgb(255, 255, 255); */
+    position: relative; /* 设置外部盒子为相对定位 */
+    top: 50%;
+    left: 40%;
+    margin-top: -50px; /* 移动元素一半的高度以确保中心点对齐 */
+    margin-left: -50px; /* 同上 */
+    animation: spin 5s linear infinite;
+}
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+  .inner-box{
+    position: absolute; /* 设置内部盒子为绝对定位 */
+    width: 50px;
+    height: 50px;
+    background-color: #26c676;
+    top: 0; /* 定位到顶部 */
+    left: 125px; /* 定位到左侧 */
+  }
+  .inner-box1{
+    position: absolute; /* 设置内部盒子为绝对定位 */
+    width: 50px;
+    height: 50px;
+    background-color: #26c676;
+    top: 250px; /* 定位到顶部 */
+    left: 125px; /* 定位到左侧 */
+  }
+  .inner-box2{
+    position: absolute; /* 设置内部盒子为绝对定位 */
+    width: 50px;
+    height: 50px;
+    background-color: #26c676;
+    top: 125px; /* 定位到顶部 */
+    left: 0; /* 定位到左侧 */
+  }
+  .inner-box3{
+    position: absolute; /* 设置内部盒子为绝对定位 */
+    width: 50px;
+    height: 50px;
+    background-color: #26c676;
+    top: 125px; /* 定位到顶部 */
+    left: 250px; /* 定位到左侧 */
+  }
