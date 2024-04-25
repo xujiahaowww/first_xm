@@ -16,6 +16,7 @@ class MyRouter extends React.Component {
                         <Route path="/" element={<Login history={history} />}></Route>
                         <Route path="/zhuche" element={<Zhuche history={history} />}></Route>
                         <Route path="/table" element={<Table history={history} />}></Route>
+
                     </Routes>
                 </HashRouter>
             </div>

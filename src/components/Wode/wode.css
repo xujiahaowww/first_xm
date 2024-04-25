@@ -63,3 +63,8 @@
     border-radius: 50%;
     left: 250px; /* 定位到左侧 */
   }
+  .botton{
+      position: fixed;
+      bottom: 1px;
+      width: 100%;
+  }

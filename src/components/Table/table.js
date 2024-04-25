@@ -62,7 +62,7 @@ class Table extends Component {
                 compont = <Xiaoxi />
                 break;
             case 'personalCenter':
-                compont = <Wode />
+                compont = <Wode history={this.props.history} />
                 break;
         }
         this.setState({ compont })

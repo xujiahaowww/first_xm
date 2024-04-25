@@ -14,10 +14,9 @@ export function Int(state = initialState, action) {
     console.log(action, 'actionaction')
     switch (action.type) {
         case ADD_TO_USERINFO: {
-            console.log('12312312312')
             return {
                 ...state,
-                userData: { ...state.userData, userinfo: action.userinfo }
+                userData: { ...state.userData, ...action.userinfo }
             }
         }
 

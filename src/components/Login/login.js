@@ -112,7 +112,7 @@ const App = props => {
                 ).then(
                     async (v) => {
                         store.dispatch(adduserInfo({ ...v }))
-                        console.log(v, 'statatata2222')
+                        console.log(store.getState(), 'statatata2222')
                         await Utils.lcStorage.setItem('userinfo',
                             {
                                 phoneNumber: v.phoneNumber,

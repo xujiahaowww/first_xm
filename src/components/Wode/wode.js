@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Popup, Badge, Toast, TabBar, List } from 'antd-mobile'
+import { Popup, Form, Input, Button, List, Radio, Toast } from 'antd-mobile'
 import {
   AppOutline,
   MessageOutline,
@@ -8,26 +8,26 @@ import {
   SetOutline,
 } from 'antd-mobile-icons'
 import Utils from '../Login/function'
+import { useNavigate } from 'react-router-dom'
 import './wode.css'
-import { addToCart } from '../../redux/action/cart-actions';
-import { updateCart } from '../../redux/action/cart-actions';
-import { deleteFromCart } from '../../redux/action/cart-actions';
+import { adduserInfo, addToCart } from '../../redux/action/cart-actions'
 import store from '../../redux/store'
+import axios from 'axios'
 
-let userinfo = Utils.lcStorage.getItem('userinfo') || {}
+
 class Wode extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      visible1: false
-
+      visible1: false,
     }
+    this.userinfo = store.getState().shoppingCart.userData || {}
     // this.timer = null
   }
 
 
   componentDidMount() {
-    console.log(userinfo, 'userinfouserinfo7')
+    console.log(this.userinfo, 'wodeuserinfo', store.getState())
     let canvas = document.getElementById("myCanvas");
     let ctx = canvas.getContext("2d")
 
@@ -131,6 +131,54 @@ class Wode extends Component {
   //   this.timer = null
   //   clearInterval(this.timer)
   // }
+  chAnge = () => {
+    console.log('chAnge')
+    console.log(this.userinfo, 'wodeuserinfo')
+    let url = "http://localhost:3007/api/changeuserinfo"
+    axios.post(url, { phoneNumber: this.userinfo.phoneNumber, password: this.userinfo.password, name: this.userinfo.name, sex: this.userinfo.sex, userID: this.userinfo.userID }).then((res) => {
+      console.log(res, 'ressss')
+      if (res.data.code == 4001) {
+        Toast.show({
+          icon: 'fail',
+          content: `${res.data.info}`,
+        })
+      }
+
+      if (res.data.info == "修改成功") {
+        Toast.show('修改成功', 2);
+        new Promise(
+          (resolve, reject) => {
+            console.log(this.userinfo)
+            resolve(this.userinfo)
+          }
+        ).then(
+          (v) => {
+            store.dispatch(adduserInfo({ ...v }))
+            Utils.lcStorage.setItem('this.userinfo',
+              {
+                phoneNumber: v.phoneNumber,
+                password: v.password,
+                imgsrc: v.imgsrc,
+                userID: v.userID,
+                name: v.name,
+                sex: v.sex,
+                isLogin: true
+              })
+            console.log(Utils.lcStorage.getItem('this.userinfo'), '333333')
+            this.setState({ visible1: false })
+          }
+        )
+
+      }
+
+    })
+  }
+  loGout = () => {
+    store.dispatch(adduserInfo({}))
+    Utils.lcStorage.removeItem('this.userinfo')
+    this.props.history.replace('/')
+    window.location.reload()
+  }
   render() {
 
     return (
@@ -139,8 +187,8 @@ class Wode extends Component {
           <div style={{ position: 'relative', width: '100%', backgroundColor: 'CaptionText', top: '0%', left: '0%' }}>
             <canvas class="canvas" height="214px" id="myCanvas"></canvas>
             <div id="avatar-box" style={{ position: 'absolute', top: '45%', left: '39%' }}>
-              <img class="userinfo-avatar" src={userinfo.imgsrc} alt="Avatar" width="100" height="100" />
-              <div class="name"> {userinfo.name}</div>
+              <img class="userinfo-avatar" src={this.userinfo.imgsrc} alt="Avatar" width="100" height="100" />
+              <div class="name"> {this.userinfo.name}</div>
             </div>
           </div>
 
@@ -169,7 +217,65 @@ class Wode extends Component {
             bodyStyle={{ height: '60vh' }}
           >
             <div>
-
+              <Form layout='horizontal'>
+                <Form.Item label='用户名' name='name'>
+                  <Input
+                    defaultValue={this.userinfo.name || ''}
+                    placeholder='请输入用户名'
+                    clearable
+                    onChange={async (value) => {
+                      this.userinfo.name = value
+                    }}
+                  />
+                </Form.Item>
+                <Form.Item label='账号' name='username'>
+                  <Input
+                    defaultValue={this.userinfo.phoneNumber || ''}
+                    placeholder='请输入账号'
+                    clearable
+                    onChange={async (value) => {
+                      this.userinfo.phoneNumber = value
+                    }}
+                  />
+                </Form.Item>
+                <Form.Item
+                  label='密码'
+                  name='password'
+                >
+                  <Input
+                    defaultValue={this.userinfo.password || ''}
+                    placeholder='请输入密码'
+                    clearable
+                    type={'text'}
+                    onChange={async (value) => {
+                      this.userinfo.password = value
+                    }}
+                  />
+                </Form.Item>
+                <Form.Item
+                  label='性别'
+                  name='sex'
+                >
+                  <Radio.Group
+                    defaultValue={this.userinfo.sex || ''}
+                    onChange={(v) => {
+                      this.userinfo.sex = v
+                    }}
+                  >
+                    <Radio value='男'>男</Radio>
+                    &nbsp; &nbsp;
+                    <Radio value='女'>女</Radio>
+                  </Radio.Group>
+                </Form.Item>
+              </Form>
+              <div className="botton" style={{ position: '', width: '100%' }}>
+                <Button block color='primary' size='large' style={{ width: '50%', display: 'inline', textAlign: 'center' }} onClick={() => { this.chAnge() }}>
+                  修改个人信息
+                </Button>
+                <Button block color='danger' size='large' style={{ width: '50%', display: 'inline', textAlign: 'center' }} onClick={() => { this.loGout() }}>
+                  注销
+                </Button>
+              </div>
             </div>
           </Popup>
           {/* <div class="circle">
