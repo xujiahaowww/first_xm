@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { List, Input, TextArea, Grid, Form, Popup, Card } from 'antd-mobile'
 import moment from 'moment'
-import io from 'socket.io-client'
+// import io from 'socket.io-client'
 // import Axios from 'axios'
 import './xiaoxi.css'
 import styles from './xiaoxi.css'
@@ -23,14 +23,14 @@ class Xiaoxi extends Component {
     }
   }
   componentDidMount() {
-    const socket = io('127.0.0.1:3005')
-    socket.on('         ', (data) => {
-      this.setState({ chatmsgs: data }, () => {
-        var div = document.getElementById('chat');
-        console.log(div, 'divvvvv')
-        div.scrollTop = div.scrollTop + div.scrollHeight;
-      })
-    })
+    // const socket = io('127.0.0.1:3005')
+    // socket.on('         ', (data) => {
+    //   this.setState({ chatmsgs: data }, () => {
+    //     var div = document.getElementById('chat');
+    //     console.log(div, 'divvvvv')
+    //     div.scrollTop = div.scrollTop + div.scrollHeight;
+    //   })
+    // })
   }
   fixCarousel() {
     setTimeout(function () {
@@ -38,10 +38,10 @@ class Xiaoxi extends Component {
     }, 0)
   }
   handleSubmit = async () => {
-    const socket = io('127.0.0.1:3005')
+    // const socket = io('127.0.0.1:3005')
     let { chatmsgs } = this.state
     chatmsgs.push({ zhanghao: '13595093807', user: '黄韵柯', avator: 'goushi', msg: this.state.msg, time: moment().format('YYYY-MM-DD HH:mm:ss')})
-    socket.emit('sendmsg', { zhanghao: '13595093807', user: '黄韵柯', avator: 'goushi', msg: this.state.msg, time: moment().format('YYYY-MM-DD HH:mm:ss') })
+    // socket.emit('sendmsg', { zhanghao: '13595093807', user: '黄韵柯', avator: 'goushi', msg: this.state.msg, time: moment().format('YYYY-MM-DD HH:mm:ss') })
     await this.setState({ chatmsgs, msg: '', })
     var div = document.getElementById('chat');
     div.scrollTop = div.scrollHeight;

@@ -13,7 +13,7 @@ import { adduserInfo, addToCart } from '../../redux/action/cart-actions'
 import { debounce } from 'lodash'
 
 let userinfo = Utils.lcStorage.getItem('userinfo') || {}
-console.log(userinfo,'userinfouserinfouserinfo')
+console.log(userinfo, 'userinfouserinfouserinfo')
 const App = props => {
     const [state, setState] = useState({
         imgsrc: userinfo.imgsrc || '',
@@ -22,7 +22,6 @@ const App = props => {
         password: userinfo.password || null,
         isLogin: userinfo.isLogin || false,
         name: userinfo.name || '',
-
     })//数组前面是读，后面是写，叫法无所谓
     const [verf, setVerf] = useState({
         yanzhengimg: '',
@@ -32,6 +31,7 @@ const App = props => {
     const navigate = useNavigate()//useNavigate需要在函数组件内部使用
 
     useEffect(() => {
+
         var url = `http://localhost:3007/api/verif`
         axios.get(url, {}, {
             withCredentials: true
@@ -72,7 +72,6 @@ const App = props => {
     // } 
     //登陆确定
     const queDing = () => {
-        console.log(verf.yanzhengshuru, state)
         let userinfo = { ...state }
         if (!state.phoneNumber) {
             Toast.show('请输入账号!!!', 2)
@@ -91,7 +90,7 @@ const App = props => {
         //     return
         // }
         console.log(userinfo, 'userinfo')
-        let url = "http://localhost:3007/api/login" 
+        let url = "http://localhost:3007/api/login"
         axios.post(url, { phoneNumber: state.phoneNumber, password: state.password }).then((res) => {
             console.log(res, 'ressss')
             if (res.data.code == 4001) {
@@ -106,32 +105,29 @@ const App = props => {
             if (res.data.info == "登录成功") {
                 Toast.show('登录成功', 2);
                 new Promise(
-                    (resolve, reject) => {
-                        setState({
-                            ...state,
-                            imgsrc: res.data.userData.imgsrc,
-                            userID: res.data.userData.userID,
-                            name: res.data.userData.name,
-                            sex: res.data.userData.sex
-                        })
-                        resolve(state)
+                     (resolve, reject) => {
+                        console.log(res.data.userData)
+                        resolve(res.data.userData)
                     }
                 ).then(
-                    (v) => {
+                    async (v) => {
                         store.dispatch(adduserInfo({ ...v }))
-                        Utils.lcStorage.setItem('userinfo',
+                        console.log(v, 'statatata2222')
+                        await Utils.lcStorage.setItem('userinfo',
                             {
-                                phoneNumber: state.phoneNumber,
-                                password: state.password,
-                                imgsrc: state.imgsrc,
-                                userID: state.userID,
-                                name: state.name,
-                                sex: state.sex,
+                                phoneNumber: v.phoneNumber,
+                                password: v.password,
+                                imgsrc: v.imgsrc,
+                                userID: v.userID,
+                                name: v.name,
+                                sex: v.sex,
                                 isLogin: true
                             })
+                        console.log(Utils.lcStorage.getItem('userinfo'), '333333')
+                        await navigate('/table')
                     }
                 )
-                navigate('/table')
+
             }
 
         })

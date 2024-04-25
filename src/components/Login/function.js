@@ -66,6 +66,7 @@ const Utils = {
                 if (Object.prototype.toString.call(value) === '[object Array]') {
                     value = JSON.stringify(value)
                 }
+                console.log(value,'valuevaluevalue')
                 localStorage.setItem(key, value)
             }
         },

@@ -1,6 +1,20 @@
+
+.canvas{
+  /* border:1px solid black; */
+  /*设置所在层数，在上层*/
+  z-index: 0;
+}
+/* 裁剪图片 */
+.userinfo-avatar {
+  border-radius: 50%;
+  top: 100;
+  z-index: 1,
+
+}
+.name{color: azure;}
 .circle {
-    width: 300px;
-    height: 300px;
+    width: 60px;
+    height: 60px;
     /* background-color: rgb(255, 255, 255); */
     position: relative; /* 设置外部盒子为相对定位 */
     top: 50%;
@@ -15,33 +29,37 @@
   }
   .inner-box{
     position: absolute; /* 设置内部盒子为绝对定位 */
-    width: 50px;
-    height: 50px;
+    width: 10px;
+    height: 10px;
     background-color: #26c676;
     top: 0; /* 定位到顶部 */
+    border-radius: 50%;
     left: 125px; /* 定位到左侧 */
   }
   .inner-box1{
     position: absolute; /* 设置内部盒子为绝对定位 */
-    width: 50px;
-    height: 50px;
+    width: 10px;
+    height: 10px;
     background-color: #26c676;
     top: 250px; /* 定位到顶部 */
+    border-radius: 50%;
     left: 125px; /* 定位到左侧 */
   }
   .inner-box2{
     position: absolute; /* 设置内部盒子为绝对定位 */
-    width: 50px;
-    height: 50px;
+    width: 10px;
+    height: 10px;
     background-color: #26c676;
     top: 125px; /* 定位到顶部 */
+    border-radius: 50%;
     left: 0; /* 定位到左侧 */
   }
   .inner-box3{
     position: absolute; /* 设置内部盒子为绝对定位 */
-    width: 50px;
-    height: 50px;
+    width: 10px;
+    height: 10px;
     background-color: #26c676;
     top: 125px; /* 定位到顶部 */
+    border-radius: 50%;
     left: 250px; /* 定位到左侧 */
   }
