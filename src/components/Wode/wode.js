@@ -191,8 +191,6 @@ class Wode extends Component {
               <div class="name"> {this.userinfo.name}</div>
             </div>
           </div>
-
-
           <div>
             <List>
               <List.Item prefix={<UnorderedListOutline />} onClick={() => { }}>

@@ -11,24 +11,36 @@ class Upload extends Component {
     isUploading: false, // 是否正在上传
     result: null  //上传结果数据
   };
-  uploadFile = (event) => {
+  uploadFile = async (event) => {
     const file = event.target.files[0];
     const data = new FormData();
     this.setState({ fileData: data })
 
     data.append('file', file);
+
+    const config = {
+      onUploadProgress: (progressEvent) => {
+        const { loaded, total } = progressEvent;
+        const percent = Math.round((loaded * 100) / total);
+        this.setState({ progress: percent });
+      },
+    }
+
     // 向服务器发送Ajax请求，上传文件
-    fetch('http://localhost:3007/api/upload', {
-      method: 'POST',
-      body: data,
-    })
-      .then(res => res.json())
-      .then(data => {
-        this.setState({ isUploading: false, result: data })
-        this.props.onUpload(data.url)
-      })
-      .catch(err => console.error(err));
-  };
+    try {
+      axios.post('http://localhost:3007/api/upload',
+        data,
+        config)
+        .then(res => {
+          console.log(res.data, 'ttttttttttt')
+          this.setState({ isUploading: false, result: res.data })
+          this.props.onUpload(res.data.url)
+        })
+        .catch(err => console.error(err));;
+    } catch (error) {
+      console.error(error);
+    }
+  }
   deleuploadFile = (delurl) => {
     let url = "http://localhost:3007/api/deleUploadingimg"
     axios.post(url, { url: delurl }).then((res) => {
@@ -40,7 +52,7 @@ class Upload extends Component {
         })
       } else if (res.data.code == 2001) {
         Toast.show('删除成功', 2);
-        this.setState({ result: null })
+        this.setState({ result: null, progress: 0 })
       }
     })
   }
@@ -59,6 +71,7 @@ class Upload extends Component {
           <>
             <h2>头像上传</h2>
             <input type="file" id="file-input" onChange={this.uploadFile} />
+            <progress value={this.state.progress} max="100" />
           </>
         )}
 

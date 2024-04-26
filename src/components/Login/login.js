@@ -81,14 +81,14 @@ const App = props => {
             Toast.show('请输入密码!!!', 2)
             return
         }
-        // if (!verf.yanzhengshuru) {
-        //     Toast.show('请输入验证码!!!', 2)
-        //     return
-        // }
-        // if (verf.yanzhengshuru.toLowerCase() !== verf.yanzhengwenzi.toLowerCase()) {
-        //     Toast.show('验证码错误!!!', 2)
-        //     return
-        // }
+        if (!verf.yanzhengshuru) {
+            Toast.show('请输入验证码!!!', 2)
+            return
+        }
+        if (verf.yanzhengshuru.toLowerCase() !== verf.yanzhengwenzi.toLowerCase()) {
+            Toast.show('验证码错误!!!', 2)
+            return
+        }
         console.log(userinfo, 'userinfo')
         let url = "http://localhost:3007/api/login"
         axios.post(url, { phoneNumber: state.phoneNumber, password: state.password }).then((res) => {
@@ -112,7 +112,6 @@ const App = props => {
                 ).then(
                     async (v) => {
                         store.dispatch(adduserInfo({ ...v }))
-                        console.log(store.getState(), 'statatata2222')
                         await Utils.lcStorage.setItem('userinfo',
                             {
                                 phoneNumber: v.phoneNumber,
@@ -123,7 +122,6 @@ const App = props => {
                                 sex: v.sex,
                                 isLogin: true
                             })
-                        console.log(Utils.lcStorage.getItem('userinfo'), '333333')
                         await navigate('/table')
                     }
                 )

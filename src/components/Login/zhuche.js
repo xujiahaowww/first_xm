@@ -56,7 +56,7 @@ const App = props => {
         let url = "http://localhost:3007/api/registered"
         axios.post(url, userinfo).then((res) => {
             console.log(res, 'ressss')
-            if (res.data.code == 4000) {
+            if (res.data.code == 4003 || res.data.code == 4001 ) {
                 Toast.show({
                     icon: 'fail',
                     content: `${res.data.info}`,
