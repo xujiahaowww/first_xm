@@ -37,14 +37,6 @@ const Utils = {
                 method: 'POST',
                 url,
                 data: parmas,
-                headers: {
-                    'M-Sy-AppId': '2020042317325994',
-                    'M-Sy-Service': 'shineyue01',
-                    'M-Sy-Version': '1.0.1',
-                    'M-Sy-Token': null,
-                    'login-token': '26f68f07b00876038096c41d2fa403c0',
-                    'Content-Type': 'application/json;charset=UTF-8', // 指定消息格式
-                },
             }).then(result => {
                 resolve(result)
             }).catch(error => {

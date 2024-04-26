@@ -102,7 +102,7 @@ class Table extends Component {
                     <TabBar
                         className='footer'
                         onChange={value => this.pageChange(value)}
-                        defaultActiveKey={'personalCenter'}
+                        defaultActiveKey={'home'}
                     >
                         {tabs.map(item => (<TabBar.Item
                             key={item.key}

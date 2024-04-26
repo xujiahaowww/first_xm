@@ -7,9 +7,9 @@ class Store {
     @action getChange = params => {
         try {
             runInAction(() => {
-                Utils.promise('/Zzjg/dept/person$m=query',params).then(v => {
+                Utils.promise('http://localhost:3007/wpapi/loadproduct',params).then(v => {
                     if (v.data) {
-                        this.zyxx = v.data.results
+                        this.zyxx = v.data.productData
                         console.log(this.zyxx, '33333333')
                     }
                 })

@@ -41,13 +41,6 @@ class Shouye extends Component {
   }
 
   componentDidMount() {
-    // let { socket, wordList } = this.state;
-    // socket.on('connect', (data) => {
-    //   console.log(data)
-    //   wordList.push(data)
-    //   this.setState({ wordList });
-    // })
-
     this.getMessage()
 
     setTimeout(() => {
@@ -99,11 +92,8 @@ class Shouye extends Component {
     new Promise(function (resolve, reject) {
       setTimeout(function () {
         store.getChange({
-          id: 8666,
-          mc: '',
-          product_id: "5101040002",
           page: cdPage,
-          size: cdSize,
+          size: 10
         })
         resolve();
       }, 100);
