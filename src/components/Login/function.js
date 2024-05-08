@@ -31,6 +31,20 @@ const Utils = {
             }
         }
     },
+    promise1: (url, parmas) => {
+        let promise = new Promise((resolve, reject) => {
+            $axios({
+                method: 'POST',
+                url,
+                data: parmas,
+            }).then(result => {
+                resolve(result)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+        return promise
+    },
     promise: (url, parmas) => {
         let promise = new Promise((resolve, reject) => {
             $axios({
@@ -58,7 +72,7 @@ const Utils = {
                 if (Object.prototype.toString.call(value) === '[object Array]') {
                     value = JSON.stringify(value)
                 }
-                console.log(value,'valuevaluevalue')
+                console.log(value, 'valuevaluevalue')
                 localStorage.setItem(key, value)
             }
         },

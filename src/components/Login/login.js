@@ -1,9 +1,7 @@
-/* eslint-disable */
-/* eslint-disable eqeqeq */
-/* eslint-disable no-useless-concat */
-
+'use strict'
 import { useState, useEffect, useRef, MutableRefObject, useCallback } from "react"
 import './login.css'
+import axios from 'axios'
 import loginTp from '../img/loginjpg.jpg'
 import { Toast, AutoCenter, Footer, Form, Input, Button } from 'antd-mobile'
 import { useNavigate } from 'react-router-dom'
@@ -129,7 +127,6 @@ const App = props => {
             }
 
         })
-
     }
     const zhuChe = () => {
         store.dispatch(adduserInfo('2', 2, 110));

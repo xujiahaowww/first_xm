@@ -3,7 +3,6 @@
 import React, { Component } from 'react'
 import { observer } from 'mobx-react'
 import ReactDom from 'react-dom'
-import { toJS } from 'mobx'
 import { PullToRefresh, SearchBar, Toast, Tabs, Swiper, Popup, DotLoading } from 'antd-mobile'
 import { sleep } from 'antd-mobile/es/utils/sleep';
 import { SwiperRef } from 'antd-mobile/es/components/swiper'
@@ -12,17 +11,16 @@ import "video-react/dist/video-react.css"
 import Utils from '../Login/function'
 import { Player, ControlBar } from 'video-react'
 import YyCalendar from './yyCalender'
-// import io from 'socket.io-client'
 import axios from 'axios'
 import './shouye.css'
 import { addToCart } from '../../redux/action/cart-actions';
 import { updateCart } from '../../redux/action/cart-actions';
 import { deleteFromCart } from '../../redux/action/cart-actions';
 import store from './store'
+import { toJS } from 'mobx';
 
 let cdPage = 1
 let cdSize = 10
-
 @observer
 class Shouye extends Component {
   constructor(props) {
@@ -36,23 +34,24 @@ class Shouye extends Component {
       lunbodata: [],
       tupianArr: [],
       dangji: {},
-      scrollTop: false
+      scrollTop: false,
     }
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     this.getMessage()
-
-    setTimeout(() => {
-      window.addEventListener('scroll', this.handleScroll, true)
-      this.setState({
-        lunbodata: ['https://static.mcake.com/goods/xingtaochulian/R8006/middle/1.jpg', 'https://static.mcake.com/goods/xingtaochulian/R8006/middle/3.jpg', 'https://static.mcake.com/goods/xingtaochulian/R8006/middle/3.jpg', 'https://static.mcake.com/goods/tianyuanshengridangao/R8005/middle/2.jpg'],
-      });
-    }, 100);
+    await store.getlunbo({
+      page: 1,
+      size: 5,
+      type: 'lunbo'
+    })
+    await this.setState({ lunbo: store.lbxx })
   }
   componentWillUnmount() {
+    cdPage = 1
     window.removeEventListener('scroll', this.handleScroll, true);
   }
+
   handleScroll = () => {
     var scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
     var windowHeight = document.documentElement.clientHeight || document.body.clientHeight;
@@ -63,7 +62,6 @@ class Shouye extends Component {
       this.setState({ scrollTop: false })
     }
     if (Math.ceil(scrollTop) + windowHeight >= scrollHeight) {
-      //考虑到滚动的位置一般可能会大于一点可滚动的高度，所以这里不能用等于
       this.Fn()
     }
   }
@@ -81,11 +79,20 @@ class Shouye extends Component {
     let sjCl = () => {
       if (cdPage === 1) {
         this.setState({ tupianArr: store.zyxx, dangji: store.zyxx[0] }, () => {
+          setTimeout(() => {
+            if (window.productload) {
+              window.addEventListener('scroll', this.handleScroll, true)
+            }
+          }, 100);
         })
       } else {
         let { tupianArr } = this.state
         let newtupianArr = tupianArr.concat(store.zyxx)
         this.setState({ tupianArr: newtupianArr })
+      }
+      if (store.zyxx.length === 0) {
+        window.productload = false
+        window.removeEventListener('scroll', this.handleScroll, true);
       }
       Toast.clear()
     }
@@ -93,7 +100,8 @@ class Shouye extends Component {
       setTimeout(function () {
         store.getChange({
           page: cdPage,
-          size: 10
+          size: 10,
+          type: 'other'
         })
         resolve();
       }, 100);
@@ -106,9 +114,12 @@ class Shouye extends Component {
     )
   }
 
-  xiangQing = (item, index) => {
-    console.log(item, index)
-    this.setState({ xqvisibe: true, xqitem: item })
+  xiangQing = async (item, index) => {
+    store.getDetail({
+      id: item.foodID
+    })
+    this.fooddetail = item
+    this.setState({ xqvisibe: true })
   }
   // 滚动监听
   scrollListener = event => {
@@ -128,22 +139,21 @@ class Shouye extends Component {
     const tabItems = [
       { key: 'one', title: '宠物用品' },
       { key: 'two', title: '预约服务' },
-      // { key: 'three', title: '动物' },
     ]
 
-    let { lunbodata } = this.state
-    let items = lunbodata.map((color, index) => (
+    let { lbxx } = store
+    let items = lbxx.map((color, index) => (
       <Swiper.Item key={index}>
         <div
           className='lunbo'
-          style={{ background: color }}
+          style={{ background: 'yellow' }}
           onClick={() => {
             Toast.show(`你点击了卡片 ${index + 1}`)
           }}
         >
           <img
             style={{ width: '100%' }}
-            src={color}
+            src={color.imgsrc}
           />
         </div>
       </Swiper.Item>
@@ -195,7 +205,7 @@ class Shouye extends Component {
                 {/* 首页 */}
                 <Swiper.Item>
                   <div className='content'>
-                    {this.state.lunbodata.length && (
+                    {lbxx.length && (
                       <div className='content'>
                         <Swiper autoplay loop>{items}</Swiper>
                       </div>
@@ -208,27 +218,30 @@ class Shouye extends Component {
                         marginLeft: '10px',
                         marginRight: '10px',
                         borderRadius: 5,
-                        height: "117px",
+                        // height: "117px",
                         background: `url(${this.state.dangji?.headphoto}) center center `
                       }} >
-                      <div style={{
-                        width: '30%',
-                        height: '100%',
-                      }} />
-                      <span style={{ position: "relative", left: "30%", width: "40%", top: "-69px", fontSize: "15px" }}>{this.state.dangji?.xingming}</span>
+                      <video
+                        style={{width: '100%'}}
+                        src={require("./React App - Google Chrome 2023-03-30 10-03-58.mp4")}
+                        muted
+                        loop
+                        autoPlay
+                        // ref={videoRef}
+                      />
                     </div>
                     {this.state.tupianArr.map((item, index) => {
                       return (
                         <div
                           key={index}
+                          style={{ border: "1px,black", marginBottom: ((this.state.tupianArr.length % 2 === 1 && this.state.tupianArr.length - 1 === index) || (this.state.tupianArr.length % 2 === 0 && (this.state.tupianArr.length - 1 === index || this.state.tupianArr.length - 2 === index))) ? '20%' : '0%' }}
                           className='tupian' >
                           <div
-                            style={{ border: "1px,black" }}
                             onClick={() => {
                               this.xiangQing(item, index)
                             }}
                           >
-                            <img src={item.headphoto || 'https://static.mcake.com/goods/tianyuanshengridangao/R8005/middle/2.jpg'}
+                            <img src={item.imgsrc || 'https://static.mcake.com/goods/tianyuanshengridangao/R8005/middle/2.jpg'}
                               style={{
                                 height: "30%",
                                 width: "100%",
@@ -239,8 +252,8 @@ class Shouye extends Component {
                               }} />
                           </div>
                           <div>
-                            <span>{item.xingming}</span>
-                            <span>￥{item.id}</span>
+                            <span>{item.title}</span>
+                            <span>￥{item.price}</span>
                           </div>
                         </div>
                       )
@@ -256,11 +269,11 @@ class Shouye extends Component {
                       this.setState({ xqvisibe: false })
                     }}
                     showCloseButton
-                    bodyStyle={{ width: '100vw', height: '60vh' }}
+                    bodyStyle={{ width: '100vw', height: '80vh' }}
                   >
                     {this.state.xqvisibe && (
                       <div style={{ overflowY: 'scroll', height: '60vh' }}>
-                        <Detail message={this.state.xqitem} />
+                        <Detail message={this.fooddetail} />
                       </div>
                     )}
                   </Popup>
@@ -281,27 +294,29 @@ class Shouye extends Component {
                 </Swiper.Item>
               </Swiper>
             </div>
-          </PullToRefresh>
+          </PullToRefresh >
 
-          {this.state.scrollTop && (
-            <div className="to_top" ref={this.myRef} onClick={() => {
-              const getTargetDOM = ReactDom.findDOMNode(this.myRef.current);
-              console.log(window.pageYOffset, 'getTargetDOMgetTargetDOM')
-              let scrollTop = window.pageYOffset;
-              // 每0.01秒向上移动100像素，直到小于或等于0结束
-              let timer = setInterval(() => {
-                scrollTop -= 100;
-                // 为负数，浏览器会不处理得
-                window.scrollTo(0, scrollTop);
-                if (scrollTop <= 0) {
-                  clearInterval(timer)
-                }
-              }, 10)
-              // document.documentElement.scrollTop = document.body.scrollTop = 0
-              this.setState({ scrollTop: false })
-            }}>返回顶部</div>
-          )}
-        </div>
+          {
+            this.state.scrollTop && (
+              <div className="to_top" ref={this.myRef} onClick={() => {
+                const getTargetDOM = ReactDom.findDOMNode(this.myRef.current);
+                console.log(window.pageYOffset, 'getTargetDOMgetTargetDOM')
+                let scrollTop = window.pageYOffset;
+                // 每0.01秒向上移动100像素，直到小于或等于0结束
+                let timer = setInterval(() => {
+                  scrollTop -= 100;
+                  // 为负数，浏览器会不处理得
+                  window.scrollTo(0, scrollTop);
+                  if (scrollTop <= 0) {
+                    clearInterval(timer)
+                  }
+                }, 10)
+                // document.documentElement.scrollTop = document.body.scrollTop = 0
+                this.setState({ scrollTop: false })
+              }}>返回顶部</div>
+            )
+          }
+        </div >
       </>
     )
   }

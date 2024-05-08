@@ -34,7 +34,7 @@ class Table extends Component {
         console.log('页面加载')
     }
     componentDidMount() {
-        this.pageChange('personalCenter')
+        this.pageChange('home')
         // let { socket, wordList } = this.state;
         // socket.on('connect', (data) => {
         //   console.log(data)
@@ -49,19 +49,25 @@ class Table extends Component {
     }
 
     pageChange = (key) => {
-
         let compont
         switch (key) {
             case 'home':
+                window.productload = true 
                 compont = <Shouye />
                 break;
             case 'todo':
+                window.productload = false
+                window.removeEventListener('scroll', this.handleScroll, true)
                 compont = <Daiban />
                 break;
             case 'message':
+                window.productload = false
+                window.removeEventListener('scroll', this.handleScroll, true)
                 compont = <Xiaoxi />
                 break;
             case 'personalCenter':
+                window.productload = false
+                window.removeEventListener('scroll', this.handleScroll, true)
                 compont = <Wode history={this.props.history} />
                 break;
         }
